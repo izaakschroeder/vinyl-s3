@@ -24,13 +24,13 @@ describe('#createVinylStream', function() {
 		expect(stream.read()).to.include({ cwd: 'test' });
 	});
 
-	it('should correctly map `Bucket` to `base`', function() {
+	it('should correctly map `Bucket` -> `base`', function() {
 		var stream = createVinylStream(), body = new Buffer(24);
 		stream.write({ Bucket: 'test', Key: 'key', Body: body });
 		expect(stream.read()).to.include({ base: 'test' });
 	});
 
-	it('should correctly map `LastModified` to the `fs.Stat` object', function() {
+	it('should correctly map `LastModified` -> `fs.Stat` object', function() {
 		var stream = createVinylStream(), date = new Date(), body = new Buffer(24);
 		stream.write({ LastModified: date, Key: 'key', Body: body });
 		expect(stream.read().stat.mtime.toString()).to.equal(date.toString());
