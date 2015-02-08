@@ -18,27 +18,27 @@
 		"coverage": "istanbul check-coverage --statement 100 --branch 100 --function 100"
 	},
 	"dependencies": {
-		"lodash": "*",
-		"vinyl": "*",
-		"through2": "1.x",
-		"through2-map": "1.x",
-		"s3-glob": ">=0.1.1",
-		"s3-streams": ">=0.1.1"
-	},
-	"peerDependencies": {
-		"aws-sdk": "*"
+		"aws-sdk": "^2.1.8",
+		"lodash": "^3.1.0",
+		"vinyl": "^0.4.6",
+		"through2": "^1.1.1",
+		"through2-map": "^1.4.0",
+		"s3-glob": "^0.2.0",
+		"s3-streams": "^0.1.1",
+		"s3-url": "^0.2.2"
 	},
 	"devDependencies": {
-		"eslint": "*",
-		"eslint-plugin-nodeca": "*",
-		"mocha": "*",
-		"istanbul": "*",
-		"chai": "*",
-		"chai-things": "*",
-		"sinon": "*",
-		"sinon-chai": "*"
+		"eslint": "^0.14.0",
+		"eslint-plugin-nodeca": "^1.0.3",
+		"mocha": "^2.1.0",
+		"istanbul": "^0.3.5",
+		"chai": "^1.10.0",
+		"chai-things": "^0.2.0",
+		"sinon": "^1.12.2",
+		"sinon-chai": "^2.6.0"
 	},
 	"engines": {
-		"node": ">=0.11"
+		"node": "^0.8 || ^0.11 || ^0.12",
+		"iojs": "^1.0.0"
 	}
 }

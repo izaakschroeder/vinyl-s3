@@ -22,12 +22,16 @@ describe('#createWriteStream', function() {
 		this.sandbox.restore();
 	});
 
-	it('should throw a `TypeError` when no S3 instance is provided', function() {
-		expect(createWriteStream).to.throw(TypeError);
+	it('should throw `TypeError` when no S3 instance provided', function() {
+		expect(_.partial(createWriteStream, { }, { s3: null })).to.throw(TypeError);
+	});
+
+	it('should throw `TypeError` when bad S3 instance provided', function() {
+		expect(_.partial(createWriteStream, { }, { s3: { } })).to.throw(TypeError);
 	});
 
 	it('should throw a `TypeError` when no bucket is provided', function() {
-		expect(_.partial(createWriteStream, this.s3)).to.throw(TypeError);
+		expect(_.partial(createWriteStream, { }, { s3: this.s3 })).to.throw(TypeError);
 	});
 
 	describe('streaming', function() {
@@ -35,14 +39,18 @@ describe('#createWriteStream', function() {
 		beforeEach(function() {
 			this.sink = new Stream.Writable();
 			this.source = new Stream.Readable();
-			this.stream = createWriteStream(this.s3, { Bucket: 'my-bucket', Key: 'bar' });
+			this.stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
 			S3S.WriteStream.returns(this.sink);
 			this.sandbox.stub(this.sink, '_write');
 			this.sandbox.stub(this.source, '_read');
 		});
 
 		it('should work with streamed files', function(done) {
-			this.stream.end(new File({ path: '/test', base: '', contents: this.source }));
+			this.stream.end(new File({
+				path: '/test',
+				base: '',
+				contents: this.source
+			}));
 			process.nextTick(_.bind(function() {
 				expect(this.source._read).to.be.called;
 				done();
@@ -58,7 +66,7 @@ describe('#createWriteStream', function() {
 			file.contentType = 'app/test';
 			this.stream.end(file);
 			expect(S3S.WriteStream).to.be.calledWithMatch(this.s3, {
-				Bucket: 'my-bucket',
+				Bucket: 'foo',
 				Key: 'bar/test',
 				ContentType: 'app/test'
 			});
@@ -69,7 +77,11 @@ describe('#createWriteStream', function() {
 				expect(err).to.equal('error');
 				done();
 			});
-			this.stream.end(new File({ path: '/', base: '', contents: through2.obj() }));
+			this.stream.end(new File({
+				path: '/',
+				base: '',
+				contents: through2.obj()
+			}));
 			this.sink.emit('error', 'error');
 		});
 	});
@@ -77,7 +89,7 @@ describe('#createWriteStream', function() {
 	describe('buffering', function() {
 
 		beforeEach(function() {
-			this.stream = createWriteStream(this.s3, { Bucket: 'my-bucket' });
+			this.stream = createWriteStream('s3://foo', { s3: this.s3 });
 			this.source = new Buffer(100);
 		});
 
@@ -90,7 +102,7 @@ describe('#createWriteStream', function() {
 			file.contentType = 'app/test';
 			this.stream.end(file);
 			expect(this.s3.putObject).to.be.calledWithMatch({
-				Bucket: 'my-bucket',
+				Bucket: 'foo',
 				Key: 'test',
 				ContentType: 'app/test',
 				Body: this.source
@@ -100,7 +112,7 @@ describe('#createWriteStream', function() {
 
 	it('should pass through any files it receives', function() {
 		var file = new File({ path: '/', base: '', contents: null });
-		this.stream = createWriteStream(this.s3, { Bucket: 'my-bucket', Key: 'bar' });
+		this.stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
 		this.stream.end(file);
 		expect(this.stream.read()).to.equal(file);
 	});
