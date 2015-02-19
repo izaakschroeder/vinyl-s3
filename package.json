@@ -1,6 +1,6 @@
 {
 	"name": "vinyl-s3",
-	"version": "0.2.0",
+	"version": "0.2.1",
 	"description": "Use S3 as a source or destination of vinyl files.",
 	"author": "Izaak Schroeder <izaak.schroeder@gmail.com>",
 	"keywords": [ "s3", "vinyl", "gulp", "gulpfriendly" ],
