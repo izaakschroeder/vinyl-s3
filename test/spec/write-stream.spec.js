@@ -116,4 +116,48 @@ describe('#createWriteStream', function() {
 		this.stream.end(file);
 		expect(this.stream.read()).to.equal(file);
 	});
+
+	it('should respect explicitly set content encoding', function() {
+		var file = new File({
+			path: 'foo.css',
+			base: '',
+			contents: new Buffer(100)
+		});
+		var stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
+		file.contentEncoding = [ 'gzip' ];
+		stream.end(file);
+		expect(this.s3.putObject).to.be.calledWithMatch({
+			ContentType: 'text/css',
+			ContentEncoding: 'gzip'
+		});
+	});
+
+	it('should respect explicitly set content type', function() {
+		var file = new File({
+			path: 'foo.css',
+			base: '',
+			contents: new Buffer(100)
+		});
+		var stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
+		file.contentType = 'application/x-css';
+		stream.end(file);
+		expect(this.s3.putObject).to.be.calledWithMatch({
+			ContentType: 'application/x-css',
+			ContentEncoding: ''
+		});
+	});
+
+	it('should detect correct content encoding', function() {
+		var file = new File({
+			path: 'foo.css.gz',
+			base: '',
+			contents: new Buffer(100)
+		});
+		var stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
+		stream.end(file);
+		expect(this.s3.putObject).to.be.calledWithMatch({
+			ContentType: 'text/css',
+			ContentEncoding: 'gzip'
+		});
+	});
 });
