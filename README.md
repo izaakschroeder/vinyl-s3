@@ -73,7 +73,7 @@ s3.src(['s3://bucket1/*.jpg', 's3://bucket1/*.png', 's3://bucket2/*.gif'])
 
 ### dest
 
-See [putObject] for a list of supported options.
+See [putObject] for a list of supported options. There is limited support for automatically detecting the correct `Content-Type` and correct `Content-Encoding`.
 
 ```javascript
 // Specify custom attributes via S3 URL.
@@ -95,8 +95,14 @@ fs.src('files/*.jpg')
 // Specify custom attributes per file.
 fs.src('files/*.jpg')
     .pipe(through2.obj(function(file, enc, next) {
+        // There are some non-standard properties on the file object that
+        // are used to generate certain AWS options.
+        file.contentType = 'image/jpeg';
+        file.contentEncoding = 'gzip';
+
         // Setting the awsOptions property on a file causes the object to be
-        // included in the command sent to S3.
+        // included in the command sent to S3. These options override any
+        // previously set value.
         file.awsOptions = {
             ACL: 'private',
             CacheControl: 'max-age=1296000',
