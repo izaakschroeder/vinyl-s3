@@ -2,8 +2,8 @@
 
 Use S3 as a source or destination of vinyl files.
 
-![build status](http://img.shields.io/travis/izaakschroeder/vinyl-s3.svg?style=flat)
-![coverage](http://img.shields.io/coveralls/izaakschroeder/vinyl-s3.svg?style=flat)
+![build status](http://img.shields.io/travis/izaakschroeder/vinyl-s3/master.svg?style=flat)
+![coverage](http://img.shields.io/coveralls/izaakschroeder/vinyl-s3/master.svg?style=flat)
 ![license](http://img.shields.io/npm/l/vinyl-s3.svg?style=flat)
 ![version](http://img.shields.io/npm/v/vinyl-s3.svg?style=flat)
 ![downloads](http://img.shields.io/npm/dm/vinyl-s3.svg?style=flat)
@@ -13,6 +13,8 @@ Features:
  * Use either streaming or buffering,
  * Upload or download files,
  * Pass custom options to S3,
+ * Smart `Content-Type` and `Content-Encoding` detection,
+ * Automatic `E-Tag` handling,
  * Works great with gulp.
 
 ## Usage
