@@ -25,7 +25,7 @@
 		"through2": "^1.1.1",
 		"through2-map": "^1.4.0",
 		"s3-glob": "^0.2.0",
-		"s3-streams": "^0.1.1",
+		"s3-streams": "^0.2.0",
 		"s3-url": "^0.2.2"
 	},
 	"devDependencies": {

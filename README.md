@@ -73,7 +73,7 @@ s3.src(['s3://bucket1/*.jpg', 's3://bucket1/*.png', 's3://bucket2/*.gif'])
 
 ### dest
 
-See [putObject] for a list of supported options. There is limited support for automatically detecting the correct `Content-Type` and correct `Content-Encoding`.
+See [putObject] for a list of supported options. There is limited support for automatically detecting the correct `Content-Type` and correct `Content-Encoding`. The `ETag` property is correctly handled for you automatically, and you're free to specify custom algorithms for generating your own.
 
 ```javascript
 // Specify custom attributes via S3 URL.
@@ -115,6 +115,17 @@ fs.src('files/*.jpg')
         next();
     }))
     .pipe(s3.dest('s3://bucket/foo'));
+```
+
+```javascript
+// Custom E-Tags
+fs.src('files/*.jpg')
+    .pipe(s3.dest({
+        Bucket: 'bucket',
+        Key: 'foo',
+        ContentType: 'image/jpeg',
+        ETag: crypto.createHash('sha1')
+    }));
 ```
 
 [getObject]: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
