@@ -117,7 +117,9 @@ describe('#createWriteStream', function() {
 				contents: this.source
 			});
 			file.awsOptions = {
-				ETag: crypto.createHash('sha1')
+				ETag: function() {
+					return crypto.createHash('sha1');
+				}
 			};
 			var expected = crypto.createHash('sha1')
 				.update(this.source)
