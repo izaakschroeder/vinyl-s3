@@ -21,7 +21,6 @@ Features:
 
 ```javascript
 var gulp = require('gulp'),
-	AWS = require('aws-sdk'),
 	s3 = require('vinyl-s3');
 
 // Upload files to S3
@@ -37,13 +36,14 @@ gulp.task('download', function() {
 });
 
 // Just print a list of files
+var through2 = require('through2');
 gulp.task('meta', function() {
 	return s3.src('s3://my-bucket/foo/**/*.jpg', { read: false })
 		.pipe(through2.obj(function(file, _, callback) {
-			console.log('found:',file.path);
+			console.log(file.path);
 			callback();
 		}));
-})
+});
 ```
 
 When working with large files you may find it useful to use streaming mode instead of buffering mode. You can enable this in the `src()` family of functions by setting `{ buffer: false }`. The default mode is to use buffering as is the same with `fs.src`.

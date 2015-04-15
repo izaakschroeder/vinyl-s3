@@ -53,4 +53,10 @@ describe('#createVinylStream', function() {
 		stream.write({ ContentType: 'foo/bar', Key: 'key', Body: body, ContentLength: '20' });
 		expect(stream.read().contents).to.have.property('length', 20);
 	});
+
+	it('should work with null vinyl objects', function() {
+		var stream = createVinylStream({ meta: true });
+		stream.write({ ContentType: 'foo/bar', Key: 'key' });
+		expect(stream.read()).to.not.be.null;
+	});
 });
