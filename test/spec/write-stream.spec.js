@@ -2,7 +2,6 @@
 'use strict';
 
 var _ = require('lodash'),
-	crypto = require('crypto'),
 	Stream = require('stream'),
 	createWriteStream = require('write-stream'),
 	through2 = require('through2'),
@@ -107,26 +106,6 @@ describe('#createWriteStream', function() {
 				Key: 'test',
 				ContentType: 'app/test',
 				Body: this.source
-			});
-		});
-
-		it('should pre-compute the E-Tag if given', function() {
-			var file = new File({
-				path: 'foo/test',
-				base: 'foo',
-				contents: this.source
-			});
-			file.awsOptions = {
-				ETag: function() {
-					return crypto.createHash('sha1');
-				}
-			};
-			var expected = crypto.createHash('sha1')
-				.update(this.source)
-				.digest('hex');
-			this.stream.end(file);
-			expect(this.s3.putObject).to.be.calledWithMatch({
-				ETag: expected
 			});
 		});
 	});

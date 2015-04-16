@@ -14,7 +14,6 @@ Features:
  * Upload or download files,
  * Pass custom options to S3,
  * Smart `Content-Type` and `Content-Encoding` detection,
- * Automatic `E-Tag` handling,
  * Works great with gulp.
 
 ## Usage
@@ -118,20 +117,6 @@ fs.src('files/*.jpg')
         next();
     }))
     .pipe(s3.dest('s3://bucket/foo'));
-```
-
-```javascript
-// Custom E-Tags using sha1; the ETags here must be a function since it applies
-// to a group of files and must return a new ETag builder per file.
-fs.src('files/*.jpg')
-    .pipe(s3.dest({
-        Bucket: 'bucket',
-        Key: 'foo',
-        ContentType: 'image/jpeg',
-        ETag: function() {
-            return crypto.createHash('sha1');
-        }
-    }));
 ```
 
 [getObject]: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
