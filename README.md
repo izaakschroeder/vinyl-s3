@@ -74,7 +74,7 @@ s3.src(['s3://bucket1/*.jpg', 's3://bucket1/*.png', 's3://bucket2/*.gif'])
 
 ### dest
 
-See [putObject] for a list of supported options. There is limited support for automatically detecting the correct `Content-Type` and correct `Content-Encoding`. The `ETag` property is correctly handled for you automatically, and you're free to specify custom algorithms for generating your own.
+See [putObject] for a list of supported options. There is limited support for automatically detecting the correct `Content-Type` and correct `Content-Encoding`.
 
 ```javascript
 // Specify custom attributes via S3 URL.
@@ -110,8 +110,7 @@ fs.src('files/*.jpg')
             ContentType: 'image/jpeg',
             Metadata: {
                 color: 'red'
-            },
-            ETag: crypto.createHash('md5')
+            }
         };
         this.push(file);
         next();
