@@ -5,7 +5,6 @@ var _ = require('lodash'),
 	Stream = require('stream'),
 	createWriteStream = require('write-stream'),
 	through2 = require('through2'),
-	S3S = require('s3-streams'),
 	File = require('vinyl');
 
 describe('#createWriteStream', function() {
@@ -13,9 +12,9 @@ describe('#createWriteStream', function() {
 	beforeEach(function() {
 		this.sandbox = sinon.sandbox.create();
 		this.s3 = {
-			putObject: this.sandbox.stub()
+			putObject: this.sandbox.stub(),
+			upload: this.sandbox.stub()
 		};
-		this.sandbox.stub(S3S, 'WriteStream');
 	});
 
 	afterEach(function() {
@@ -37,24 +36,9 @@ describe('#createWriteStream', function() {
 	describe('streaming', function() {
 
 		beforeEach(function() {
-			this.sink = new Stream.Writable();
 			this.source = new Stream.Readable();
 			this.stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
-			S3S.WriteStream.returns(this.sink);
-			this.sandbox.stub(this.sink, '_write');
 			this.sandbox.stub(this.source, '_read');
-		});
-
-		it('should work with streamed files', function(done) {
-			this.stream.end(new File({
-				path: '/test',
-				base: '',
-				contents: this.source
-			}));
-			process.nextTick(_.bind(function() {
-				expect(this.source._read).to.be.called;
-				done();
-			}, this));
 		});
 
 		it('should upload correct data', function() {
@@ -65,14 +49,16 @@ describe('#createWriteStream', function() {
 			});
 			file.contentType = 'app/test';
 			this.stream.end(file);
-			expect(S3S.WriteStream).to.be.calledWithMatch(this.s3, {
+			expect(this.s3.upload).to.be.calledWithMatch({
 				Bucket: 'foo',
+				Body: this.source,
 				Key: 'bar/test',
 				ContentType: 'app/test'
 			});
 		});
 
 		it('should correctly pass on streaming upload errors', function(done) {
+			this.s3.upload.callsArgWith(2, 'error');
 			this.stream.once('error', function(err) {
 				expect(err).to.equal('error');
 				done();
@@ -82,7 +68,6 @@ describe('#createWriteStream', function() {
 				base: '',
 				contents: through2.obj()
 			}));
-			this.sink.emit('error', 'error');
 		});
 	});
 
@@ -101,7 +86,7 @@ describe('#createWriteStream', function() {
 			});
 			file.contentType = 'app/test';
 			this.stream.end(file);
-			expect(this.s3.putObject).to.be.calledWithMatch({
+			expect(this.s3.upload).to.be.calledWithMatch({
 				Bucket: 'foo',
 				Key: 'test',
 				ContentType: 'app/test',
@@ -126,7 +111,7 @@ describe('#createWriteStream', function() {
 		var stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
 		file.contentEncoding = [ 'gzip' ];
 		stream.end(file);
-		expect(this.s3.putObject).to.be.calledWithMatch({
+		expect(this.s3.upload).to.be.calledWithMatch({
 			ContentType: 'text/css',
 			ContentEncoding: 'gzip'
 		});
@@ -141,7 +126,7 @@ describe('#createWriteStream', function() {
 		var stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
 		file.contentType = 'application/x-css';
 		stream.end(file);
-		expect(this.s3.putObject).to.be.calledWithMatch({
+		expect(this.s3.upload).to.be.calledWithMatch({
 			ContentType: 'application/x-css',
 			ContentEncoding: ''
 		});
@@ -155,7 +140,7 @@ describe('#createWriteStream', function() {
 		});
 		var stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
 		stream.end(file);
-		expect(this.s3.putObject).to.be.calledWithMatch({
+		expect(this.s3.upload).to.be.calledWithMatch({
 			ContentType: 'text/css',
 			ContentEncoding: 'gzip'
 		});
