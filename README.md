@@ -74,7 +74,7 @@ s3.src(['s3://bucket1/*.jpg', 's3://bucket1/*.png', 's3://bucket2/*.gif'])
 
 ### dest
 
-See [putObject] for a list of supported options. There is limited support for automatically detecting the correct `Content-Type` and correct `Content-Encoding`.
+See [putObject] and [upload] for a list of supported options. There is limited support for automatically detecting the correct `Content-Type` and correct `Content-Encoding`. Parallel uploads are supported by passing `{ queueSize: n }` as a second parameter.
 
 ```javascript
 // Specify custom attributes via S3 URL.
@@ -120,3 +120,4 @@ fs.src('files/*.jpg')
 
 [getObject]: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#getObject-property
 [putObject]: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#putObject-property
+[upload]: http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/S3.html#upload-property
