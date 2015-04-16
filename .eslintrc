@@ -3,10 +3,6 @@
 		"node": true
 	},
 
-	"plugins": [
-		"nodeca"
-	],
-
 	"rules": {
 		"brace-style": [2, "1tbs"],
 		"default-case": 2,
@@ -17,6 +13,7 @@
 		"func-names": 2,
 		"func-style": [2, "declaration"],
 		"guard-for-in": 2,
+		"indent": [2, "tab"],
 		"new-cap": 0,
 		"no-floating-decimal": 2,
 		"no-lonely-if": 2,
@@ -25,8 +22,6 @@
 		"no-use-before-define": 2,
 		"no-undefined": 2,
 		"no-underscore-dangle": 0,
-		"nodeca/indent": [2, "tabs", 1],
-		"nodeca/no-lodash-aliases": 2,
 		"quotes": [2, "single"],
 		"radix": 2,
 		"space-after-keywords": [2, "always"],
