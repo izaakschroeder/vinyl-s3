@@ -59,7 +59,7 @@ s3.src('s3://bucket/key/*?IfModifiedSince=123456789')
 
 ```javascript
 // Specify custom attributes by passing in an AWS options object.
-src.src({
+s3.src({
     Bucket: 'bucket',
     Key: 'key/*',
     IfModifiedSince: Date.now()
