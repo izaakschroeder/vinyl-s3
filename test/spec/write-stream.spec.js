@@ -117,6 +117,19 @@ describe('#createWriteStream', function() {
 		});
 	});
 
+	it('should not set content encoding if not present', function() {
+		var file = new File({
+			path: 'foo.css',
+			base: '',
+			contents: new Buffer(100)
+		});
+		var stream = createWriteStream('s3://foo/bar', { s3: this.s3 });
+		stream.end(file);
+		expect(this.s3.upload).not.to.be.calledWithMatch({
+			ContentEncoding: ''
+		});
+	});
+
 	it('should respect explicitly set content type', function() {
 		var file = new File({
 			path: 'foo.css',
@@ -127,8 +140,7 @@ describe('#createWriteStream', function() {
 		file.contentType = 'application/x-css';
 		stream.end(file);
 		expect(this.s3.upload).to.be.calledWithMatch({
-			ContentType: 'application/x-css',
-			ContentEncoding: ''
+			ContentType: 'application/x-css'
 		});
 	});
 
