@@ -130,5 +130,19 @@ describe('#createReadStream', function() {
 		expect(this.s3.headObject).to.be.calledOnce;
 	});
 
+	it('should not make additional S3 calls when meta disabled', function() {
+		var object = { Key: 'banana', Bucket: 'apple' },
+			stream = through2.obj();
+
+		stream.pipe(createReadStream({
+			s3: this.s3,
+			read: false,
+			meta: false
+		})).read(0);
+		stream.end(object);
+
+		expect(this.s3.headObject).not.to.be.called;
+	});
+
 
 });
