@@ -36,10 +36,16 @@ describe('#createVinylStream', function() {
 		expect(stream.read().stat.mtime.toString()).to.equal(date.toString());
 	});
 
-	it('should collect metadata when meta is enabled', function() {
+	it('should collect `contentType` when meta is enabled', function() {
 		var stream = createVinylStream({ meta: true }), body = new Buffer(24);
 		stream.write({ ContentType: 'foo/bar', Key: 'key', Body: body });
 		expect(stream.read()).to.include({ contentType: 'foo/bar' });
+	});
+
+	it('should collect `eTag` when meta is enabled', function() {
+		var stream = createVinylStream({ meta: true }), body = new Buffer(24);
+		stream.write({ ETag: '1234', Key: 'key', Body: body });
+		expect(stream.read()).to.include({ eTag: '1234' });
 	});
 
 	it('should omit metadata when meta is disabled', function() {
