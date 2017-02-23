@@ -47,6 +47,14 @@ gulp.task('meta', function() {
 
 When working with large files you may find it useful to use streaming mode instead of buffering mode. You can enable this in the `src()` family of functions by setting `{ buffer: false }`. The default mode is to use buffering as is the same with `fs.src`.
 
+### Credentials
+
+Set the environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`.
+
+Alternatively, the `src` and `dest` methods can also take an S3 object as an options parameter. So you can do `s3.src(... { s3: new AWS.S3({ accessKeyId: ... }) })` in your options.
+
+However, keeping credentials in environment variables is supported by the AWS SDK out of the box and allows you to transition easily to other safer authentication methods where supported.
+
 ### src
 
 See [getObject] for a list of supported options.
